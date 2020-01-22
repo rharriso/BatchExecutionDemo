@@ -1,13 +1,23 @@
 package org.example
 
+import org.apache.log4j.PropertyConfigurator
 import spark.Spark.*
+import java.util.*
 
 class GatewayService {
     companion object {
         private val allowedHeaders = listOf("Content-Type", "Authorization", "X-Guest-UUID", "X-Alias-UUID,Accept")
 
+        private val log4jConfigure by lazy {
+            val propFileContent = GatewayService::class.java.getResourceAsStream("/log4j.properties")
+            val p = Properties()
+            p.load(propFileContent)
+            p
+        }
+
         @JvmStatic
         fun main(args: Array<String>) {
+            PropertyConfigurator.configure(log4jConfigure)
             port(5000)
             defineRoutes()
         }
